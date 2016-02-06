@@ -1,58 +1,58 @@
-var app = angular.module('TexturePacker', ['ngMaterial']);
+var express = require('express');
+var path = require('path');
+var favicon = require('serve-favicon');
+var logger = require('morgan');
+var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
 
-app.controller('AppCtrl', ['$scope',
-    function($scope) {
-        $scope.canvas = document.createElement('canvas');
-        $scope.context = $scope.canvas.getContext('2d');
-        $scope.images = [];
-        var canvas = document.createElement('canvas');
-        var context = canvas.getContext('2d');
+var routes = require('./routes/index');
 
-        document.getElementById('fileInput').addEventListener('change', function(evt) {
-            var files = evt.target.files;
-            for (var i = 0, file; file = files[i]; i++) {
-                // Only process image files.
-                if (!file.type.match('image.*')) {
-                    continue;
-                }
+var app = express();
 
-                var reader = new FileReader();
+// view engine setup
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
 
-                // Closure to capture the file information.
-                reader.onload = (function(theFile) {
-                    return function(e) {
-                        var imageInfo = {
-                            name: theFile.name,
-                            raw: e.target.result,
-                            rawCropped: null,
-                            source: null,
-                            cropped: null,
-                            width: 0,
-                            height: 0,
-                            bounds: null,
-                        };
-                        var img = new Image();
-                        img.onload = function() {
-                            imageInfo.width = canvas.width = img.width;
-                            imageInfo.height = canvas.height = img.height;
-                            context.drawImage(img, 0, 0);
-                            imageInfo.source = context.getImageData(0, 0, canvas.width, canvas.height);
-                            var cords = imageInfo.bounds = Utils.getBound(imageInfo.source, img.width, img.height);
-                            imageInfo.cropped = context.getImageData(cords.x, cords.y, cords.w, cords.h);
-                            imageInfo.rawCropped = Utils.imageDataToSrc(imageInfo.cropped);
-                            $scope.$apply(function(){
-                                $scope.images.push(imageInfo);
-                                // console.log($scope.images);
-                            });
-                            URL.revokeObjectURL(img.src);
-                        };
-                        img.src = e.target.result;
-                    };
-                })(file);
+// uncomment after placing your favicon in /public
+//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(logger('dev'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
 
-                // Read in the image file as a data URL.
-                reader.readAsDataURL(file);
-            }
-        });
-    }
-]);
+app.use('/', routes);
+
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+  var err = new Error('Not Found');
+  err.status = 404;
+  next(err);
+});
+
+// error handlers
+
+// development error handler
+// will print stacktrace
+if (app.get('env') === 'development') {
+  app.use(function(err, req, res, next) {
+    res.status(err.status || 500);
+    res.render('error', {
+      message: err.message,
+      error: err
+    });
+  });
+}
+
+// production error handler
+// no stacktraces leaked to user
+app.use(function(err, req, res, next) {
+  res.status(err.status || 500);
+  res.render('error', {
+    message: err.message,
+    error: {}
+  });
+});
+
+
+module.exports = app;
