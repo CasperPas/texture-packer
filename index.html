@@ -1,0 +1,18 @@
+<html ng-app="TexturePacker">
+<!-- <html> -->
+<head>
+<script type="text/javascript" src="bower_components/angular/angular.min.js"></script>
+<script type="text/javascript" src="bower_components/angular-animate/angular-animate.min.js"></script>
+<script type="text/javascript" src="bower_components/angular-aria/angular-aria.min.js"></script>
+<script type="text/javascript" src="bower_components/angular-messages/angular-messages.min.js"></script>
+<script type="text/javascript" src="bower_components/angular-material/angular-material.min.js"></script>
+<script type="text/javascript" src="utils.js"></script>
+<script type="text/javascript" src="app.js"></script>
+
+<link rel="stylesheet" type="text/css" href="bower_components/angular-material/angular-material.min.css" />
+</head>
+<body ng-controller="AppCtrl">
+    <input id="fileInput" type="file" multiple/>
+    <img ng-repeat="image in images" ng-src="{{image.rawCropped}}" />
+</body>
+</html>

@@ -1,0 +1,32 @@
+{
+  "name": "texturepacker",
+  "version": "0.1.0",
+  "authors": [
+    "Le Tuan Linh <casper.pas@gmail.com>"
+  ],
+  "moduleType": [
+    "amd",
+    "es6",
+    "globals",
+    "node"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular-material": "master",
+    "angular-resource": "~1.4.x",
+    "angular-route": "~1.4.x",
+    "angular-sanitize": "~1.4.x"
+  },
+  "resolutions": {
+    "angular-material": "master",
+    "angular": "1.5.0"
+  }
+}
